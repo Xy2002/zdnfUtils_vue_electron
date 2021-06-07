@@ -1,0 +1,172 @@
+<template>
+  <div id="app">
+    <el-container>
+      <el-header>
+        <el-row type="flex" class="row-bg" justify="space-between">
+          <el-col :span="6">
+            <div class="grid-content"></div>
+          </el-col>
+          <el-col :span="6">
+            <div class="grid-content"><h1>广州南方学院-教务小助手</h1></div>
+          </el-col>
+          <el-col :span="6">
+            <div class="grid-content"></div>
+          </el-col>
+        </el-row>
+      </el-header>
+      <el-main>
+        <el-row type="flex" class="row-bg" justify="space-between">
+          <el-col :span="6">
+            <div class="grid-content"></div>
+          </el-col>
+          <el-col :span="6">
+            <div class="grid-content"><h3>请先登录！</h3></div>
+          </el-col>
+          <el-col :span="6">
+            <div class="grid-content"></div>
+          </el-col>
+        </el-row>
+
+        <el-row type="flex" class="row-bg" justify="center">
+          <el-col :span="7">
+            <div class="grid-content"></div>
+          </el-col>
+          <el-col :span="10">
+            <div class="grid-content" id="loginForm">
+              <el-form
+                  :label-position="labelPosition"
+                  status-icon
+                  :rules="rules"
+                  ref="loginFormS"
+                  label-width="80px"
+                  :model="loginFormS"
+                  id="loginForm2"
+              >
+                <el-form-item prop="username" label="教务账号">
+                  <el-input v-model="loginFormS.username"></el-input>
+                </el-form-item>
+                <el-form-item prop="pass" label="教务密码">
+                  <el-input
+                      type="password"
+                      v-model="loginFormS.pass"
+                  ></el-input>
+                </el-form-item>
+                <div class="buttonGroup">
+                  <el-form-item>
+                    <el-button type="primary" @click="submitForm('loginFormS')"
+                    >提交
+                    </el-button
+                    >
+                    <el-button @click="resetForm('loginFormS')">重置</el-button>
+                  </el-form-item>
+                </div>
+              </el-form>
+            </div>
+          </el-col>
+          <el-col :span="7">
+            <div class="grid-content"></div>
+          </el-col>
+        </el-row>
+      </el-main>
+    </el-container>
+  </div>
+</template>
+
+<script>
+const ecampusLogin = require("../utils/ecampusLogin");
+export default {
+  name: "login",
+  data() {
+    var validateUsername = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入账号"));
+      } else {
+        callback();
+      }
+    };
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        callback();
+      }
+    };
+    return {
+      activeIndex: "1",
+      isLogin: false,
+      labelPosition: "right",
+      loginFormS: {
+        username: "",
+        pass: "",
+      },
+      rules: {
+        pass: [{validator: validatePass, trigger: "blur"}],
+        username: [{validator: validateUsername, trigger: "blur"}],
+      },
+    };
+  },
+  methods: {
+    handleSelect(key, keyPath) {
+      console.log(key, keyPath);
+    },
+    submitForm(formName) {
+      const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      this.$refs[formName].validate(async (valid) => {
+        if (valid) {
+          let user = {};
+          user.username = this.loginFormS.username;
+          user.password = this.loginFormS.pass;
+          ecampusLogin(user)
+              .then((res) => {
+                this.$store.commit("increment", res);
+                document.cookie = `jwLoginToken=${res}`;
+                location.reload();
+                loading.close();
+              })
+              .catch((err) => {
+                this.$alert(err, "Tips", {
+                  confirmButtonText: "确定",
+                });
+                loading.close();
+              });
+        } else {
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
+  },
+};
+</script>
+
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+
+#loginForm {
+  border-radius: 4px;
+  border: 1px solid gray;
+}
+
+#loginForm2 {
+  margin-top: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+
+.buttonGroup {
+  margin-left: -80px;
+}
+</style>
