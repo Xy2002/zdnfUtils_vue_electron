@@ -96,13 +96,16 @@ export default {
     async initInfo() {
       let jwloginToken = this.$store.getters.getToken
       let loginStatus = await checkLoginStatus(jwloginToken)
+      console.log(loginStatus)
       if (loginStatus === true) {
         this.infoForm = await getInfo(jwloginToken)
       } else {
-        this.openError3Notify()
+        this.$notify.error({
+          title: 'Error',
+          message: '登录状态已过期，请重新登录'
+        });
         this.$router.push("./login");
       }
-      console.log(this.infoForm)
     },
     submitForm(formName) {
       let jwloginToken = this.$store.getters.getToken
@@ -144,12 +147,6 @@ export default {
       this.$notify.error({
         title: 'Error',
         message: '教务系统未成功响应，更新信息失败'
-      });
-    },
-    openError3Notify() {
-      this.$notify.error({
-        title: 'Error',
-        message: '登录状态已过期，请重新登录'
       });
     },
     openConfirm(formName) {

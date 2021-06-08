@@ -127,7 +127,7 @@ export default {
                 document.cookie = `jwLoginToken=${res}`;
                 this.$notify({
                   title: '成功',
-                  message: `登录成功${res}`,
+                  message: `登录成功`,
                   type: 'success'
                 });
                 location.reload();

@@ -7,6 +7,7 @@
 import FullCalendar from '@fullcalendar/vue'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import courseSpider from '../utils/courseSpider';
+import {checkLoginStatus} from "@/utils/getInfo";
 
 export default {
   name: "calendar",
@@ -66,7 +67,22 @@ export default {
       },
     }
   },
-  created() {
+  methods: {
+    async checkStatus() {
+      let jwloginToken = this.$store.getters.getToken
+      let loginStatus = await checkLoginStatus(jwloginToken)
+      console.log(loginStatus)
+      if (loginStatus !== true) {
+        this.$notify.error({
+          title: 'Error',
+          message: '登录状态已过期，请重新登录'
+        });
+        this.$router.push("./login");
+      }
+    }
+  },
+  async created() {
+    await this.checkStatus()
     let arr = ['https://unpkg.com/popper.js/dist/umd/popper.min.js',
       'https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js'];
     arr.map((item) => {

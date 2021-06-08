@@ -43,7 +43,7 @@ function checkLoginStatus(jwloginToken) {
             if (err) reject(err)
             else {
                 let resJson = JSON.parse(res.body)
-                if (resJson.err === 400) {
+                if (!resJson.msg) {
                     resolve(false)
                 } else {
                     resolve(true)

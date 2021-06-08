@@ -41,6 +41,7 @@
 
 <script>
 import examSpider from '../utils/examSpider'
+import {checkLoginStatus} from "@/utils/getInfo";
 
 export default {
   name: "examList",
@@ -52,22 +53,33 @@ export default {
   methods: {
     async getExamList() {
       let jwloginToken = this.$store.getters.getToken
-      let obj = await examSpider(jwloginToken)
-      let result = []
-      for (let i = 0; i < obj.length; i++) {
-        let data = obj[i]
-        let formatObj = {}
-        formatObj.schoolYear = data.kkxn
-        formatObj.date = data.ksrq
-        formatObj.teacher = data.jkls
-        formatObj.schoolTerm = data.xnxq
-        formatObj.address = data.kscd
-        formatObj.name = data.kcName
-        formatObj.time = data.kssj
-        formatObj.unit = data.xymc
-        result.push(formatObj)
+      let loginStatus = await checkLoginStatus(jwloginToken)
+      console.log(loginStatus)
+      if (loginStatus === true) {
+        let obj = await examSpider(jwloginToken)
+        let result = []
+        for (let i = 0; i < obj.length; i++) {
+          let data = obj[i]
+          let formatObj = {}
+          formatObj.schoolYear = data.kkxn
+          formatObj.date = data.ksrq
+          formatObj.teacher = data.jkls
+          formatObj.schoolTerm = data.xnxq
+          formatObj.address = data.kscd
+          formatObj.name = data.kcName
+          formatObj.time = data.kssj
+          formatObj.unit = data.xymc
+          result.push(formatObj)
+        }
+        this.tableData = result
+      } else {
+        this.$notify.error({
+          title: 'Error',
+          message: '登录状态已过期，请重新登录'
+        });
+        this.$router.push("./login");
       }
-      this.tableData = result
+
     }
   },
   created() {

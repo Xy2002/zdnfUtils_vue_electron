@@ -112,6 +112,7 @@
 <script>
 import transcriptSpider from '../utils/transcriptSpider'
 import scoreStatistics from '../utils/scoreStatistics'
+import {checkLoginStatus} from "@/utils/getInfo";
 
 export default {
   name: "transcriptList",
@@ -131,14 +132,23 @@ export default {
   methods: {
     async getAlerTitle() {
       let jwloginToken = this.$store.getters.getToken
-      let obj = await transcriptSpider(jwloginToken, {xn: '2020', xq: '2'})
-      let actualId = obj.user.actualId
-      let statistics = await scoreStatistics(jwloginToken, actualId)
-      let avgScore = statistics.avg
-      let avgPoint = statistics.avgJd
-      let sumScore = statistics.yxxf
-      let havenScore = statistics.yhdxf
-      this.alertTitle = `已获得学分:${havenScore},当前已选学分:${sumScore},历年平均成绩为:${avgScore},历年平均绩点为:${avgPoint}`
+      let loginStatus = await checkLoginStatus(jwloginToken)
+      if (loginStatus === true) {
+        let obj = await transcriptSpider(jwloginToken, {xn: '2020', xq: '2'})
+        let actualId = obj.user.actualId
+        let statistics = await scoreStatistics(jwloginToken, actualId)
+        let avgScore = statistics.avg
+        let avgPoint = statistics.avgJd
+        let sumScore = statistics.yxxf
+        let havenScore = statistics.yhdxf
+        this.alertTitle = `已获得学分:${havenScore},当前已选学分:${sumScore},历年平均成绩为:${avgScore},历年平均绩点为:${avgPoint}`
+      } else {
+        this.$notify.error({
+          title: 'Error',
+          message: '登录状态已过期，请重新登录'
+        });
+        this.$router.push("./login");
+      }
     },
     async getTranscript() {
       let jwloginToken = this.$store.getters.getToken
