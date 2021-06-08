@@ -6,7 +6,7 @@
       </el-col>
       <el-col :span="12">
         <div class="grid-content">
-          <h3>个人中心</h3>
+          <h3>注:所有信息都是基于教务系统获取</h3>
           <el-form :model="infoForm" status-icon :rules="rules" ref="infoForm" label-width="100px"
                    class="demo-ruleForm">
             <el-form-item prop="name">

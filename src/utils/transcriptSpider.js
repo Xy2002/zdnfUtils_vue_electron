@@ -4,7 +4,7 @@ const request = require('request');
  * 获取成绩单
  * @param {string}jwloginToken 从ecampus获取
  * @param {object}_options 需要包含xn(学年)和xq(学期)
- * @returns {Promise<string>} 返回成绩数据，默认为String，可用JSON.parse转换为JSON格式
+ * @returns {Promise<object>} 返回成绩数据，默认为String，可用JSON.parse转换为JSON格式
  */
 function transcriptSpider(jwloginToken, _options) {
     let options = {
@@ -27,7 +27,7 @@ function transcriptSpider(jwloginToken, _options) {
     return new Promise((resolve, reject) => {
         request(options, function (error, response) {
             if (error) reject(error);
-            resolve(response.body);
+            resolve(JSON.parse(response.body));
         });
     })
 }

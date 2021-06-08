@@ -1,9 +1,9 @@
 const request = require('request');
 
 /**
- *
+ * 待考试列表获取
  * @param {string}jwloginToken 从ecampus获取
- * @returns {Promise<string>}examInfo 返回考试信息，默认为String，可用JSON.parse转换为JSON格式
+ * @returns {Promise<Array>}examInfo 返回考试信息，默认为JSON
  */
 function examSpider(jwloginToken){
     let options = {
@@ -22,7 +22,7 @@ function examSpider(jwloginToken){
     return new Promise((resolve, reject) => {
         request(options, function (error, response) {
             if (error) reject(error);
-            resolve(response.body);
+            resolve(JSON.parse(response.body).msg);
         });
     })
 }

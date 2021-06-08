@@ -10,6 +10,9 @@ import VueRouter from 'vue-router';
 //引用page1页面
 import login from './components/login';
 import info from './components/info'
+import calendar from './components/calendar'
+import examList from "@/components/examList";
+import transcriptList from "@/components/transcriptList";
 //第三方库需要use一下才能用
 Vue.use(VueRouter)
 
@@ -18,7 +21,10 @@ Vue.use(VueRouter)
 const routes = [
     //单个路由均为对象类型，path代表的是路径，component代表组件
     {path: '/login', component: login},
-    {path: '/info', component: info}
+    {path: '/info', component: info},
+    {path: '/calendar', component: calendar},
+    {path: '/examList', component: examList},
+    {path: '/transcriptList', component: transcriptList}
 ]
 
 //实例化VueRouter并将routes添加进去

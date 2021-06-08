@@ -1,0 +1,81 @@
+<template>
+  <el-table
+      :data="tableData"
+      style="width: 100%"
+      stripe
+      max-height="650">
+    <el-table-column
+        prop="name"
+        label="课程名称">
+    </el-table-column>
+    <el-table-column
+        prop="schoolYear"
+        label="开课学年">
+    </el-table-column>
+    <el-table-column
+        prop="schoolTerm"
+        label="学年学期">
+    </el-table-column>
+    <el-table-column
+        prop="unit"
+        label="开课单位">
+    </el-table-column>
+    <el-table-column
+        prop="date"
+        label="考试日期">
+    </el-table-column>
+    <el-table-column
+        prop="time"
+        label="考试时间">
+    </el-table-column>
+    <el-table-column
+        prop="address"
+        label="考试场地">
+    </el-table-column>
+    <el-table-column
+        prop="teacher"
+        label="监考老师">
+    </el-table-column>
+  </el-table>
+</template>
+
+<script>
+import examSpider from '../utils/examSpider'
+
+export default {
+  name: "examList",
+  data() {
+    return {
+      tableData: []
+    }
+  },
+  methods: {
+    async getExamList() {
+      let jwloginToken = this.$store.getters.getToken
+      let obj = await examSpider(jwloginToken)
+      let result = []
+      for (let i = 0; i < obj.length; i++) {
+        let data = obj[i]
+        let formatObj = {}
+        formatObj.schoolYear = data.kkxn
+        formatObj.date = data.ksrq
+        formatObj.teacher = data.jkls
+        formatObj.schoolTerm = data.xnxq
+        formatObj.address = data.kscd
+        formatObj.name = data.kcName
+        formatObj.time = data.kssj
+        formatObj.unit = data.xymc
+        result.push(formatObj)
+      }
+      this.tableData = result
+    }
+  },
+  created() {
+    this.getExamList()
+  }
+}
+</script>
+
+<style scoped>
+
+</style>

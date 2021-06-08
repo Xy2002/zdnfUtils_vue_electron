@@ -9,10 +9,10 @@
           @select="handleSelect"
       >
         <el-menu-item route="./info" index="1"> 个人中心</el-menu-item>
-        <el-menu-item route="./courseInfo" index="2">课程表</el-menu-item>
-        <el-menu-item index="3">考试信息列表</el-menu-item>
-        <el-menu-item index="4">成绩查询</el-menu-item>
-        <el-menu-item index="5">全景地图</el-menu-item>
+        <el-menu-item route="./calendar" index="2">课程表</el-menu-item>
+        <el-menu-item route="./examList" index="3">考试信息列表</el-menu-item>
+        <el-menu-item route="./transcriptList" index="4">成绩查询</el-menu-item>
+        <el-menu-item index="5"><a href="https://www.naiquoy.com/vr/index.html" target="_blank">全景地图</a></el-menu-item>
       </el-menu>
       <router-view></router-view>
     </div>
@@ -46,7 +46,7 @@ export default {
         this.$router.push("./login");
       }
       if (this.isLogin == true) {
-        if (this.$route.fullPath == "/login") {
+        if (this.$route.fullPath !== "/info") {
           this.$router.push("./info");
         }
       }
@@ -83,4 +83,7 @@ export default {
   margin-left: -80px;
 }
 
+a {
+  text-decoration: none;
+}
 </style>
