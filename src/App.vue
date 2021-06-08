@@ -56,6 +56,7 @@ export default {
   },
   created() {
     this.initLoginState();
+
   },
 };
 </script>

@@ -5,9 +5,7 @@ import router from './router.js'
 import App from './App.vue'
 import store from './store'
 import electron from 'electron'
-
 Vue.prototype.$electron = electron;
-
 
 Vue.use(ElementUI)
 Vue.config.productionTip = false
