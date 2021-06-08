@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import getInfo from '../utils/getInfo'
+import {getInfo, checkLoginStatus} from '../utils/getInfo'
 import updateContact from '../utils/updateContact'
 
 export default {
@@ -95,7 +95,13 @@ export default {
   methods: {
     async initInfo() {
       let jwloginToken = this.$store.getters.getToken
-      this.infoForm = await getInfo(jwloginToken)
+      let loginStatus = await checkLoginStatus(jwloginToken)
+      if (loginStatus === true) {
+        this.infoForm = await getInfo(jwloginToken)
+      } else {
+        this.openError3Notify()
+        this.$router.push("./login");
+      }
       console.log(this.infoForm)
     },
     submitForm(formName) {
@@ -140,6 +146,12 @@ export default {
         message: '教务系统未成功响应，更新信息失败'
       });
     },
+    openError3Notify() {
+      this.$notify.error({
+        title: 'Error',
+        message: '登录状态已过期，请重新登录'
+      });
+    },
     openConfirm(formName) {
       this.$confirm('此操作将会更新教务系统上的信息, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -153,7 +165,8 @@ export default {
           message: '已取消操作'
         });
       });
-    }
+    },
+
   },
   created() {
     this.initInfo()

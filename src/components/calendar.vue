@@ -14,6 +14,7 @@ export default {
     FullCalendar
   },
   data() {
+    const jwloginToken = this.$store.getters.getToken
     return {
       calendarOptions: {
         plugins: [timeGridPlugin],
@@ -40,7 +41,6 @@ export default {
           });
         },
         events: async function (info, successCallback, failureCallback) {
-          let jwloginToken = document.cookie.split("=")[1]
           let courseData = await courseSpider(jwloginToken)
           let courseFormatData = []
           for (let i = 0; i < courseData.length; i++) {

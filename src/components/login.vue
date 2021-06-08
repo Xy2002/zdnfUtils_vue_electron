@@ -123,8 +123,13 @@ export default {
           user.password = this.loginFormS.pass;
           ecampusLogin(user)
               .then((res) => {
-                this.$store.commit("increment", res);
+                this.$store.commit("increment", res)
                 document.cookie = `jwLoginToken=${res}`;
+                this.$notify({
+                  title: '成功',
+                  message: `登录成功${res}`,
+                  type: 'success'
+                });
                 location.reload();
                 loading.close();
               })
@@ -135,6 +140,11 @@ export default {
                 loading.close();
               });
         } else {
+          this.$notify.error({
+            title: '错误',
+            message: '请输入账号密码'
+          });
+          loading.close();
           return false;
         }
       });

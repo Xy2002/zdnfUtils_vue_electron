@@ -35,15 +35,16 @@ export default {
       console.log(key, keyPath);
     },
     initLoginState() {
-      if (this.$store.getters.getToken) {
+      if (this.$store.getters.getToken || document.cookie) {
         this.isLogin = true;
-      } else if (document.cookie) {
-        this.isLogin = true;
-        this.$store.commit("increment", document.cookie.split("=")[1]);
-        console.log(document.cookie);
+        if (document.cookie) {
+          this.$store.commit("increment", document.cookie.split("=")[1]);
+        }
       } else {
         this.isLogin = false;
-        this.$router.push("./login");
+        if (this.$route.fullPath !== "/login") {
+          this.$router.push("./login");
+        }
       }
       if (this.isLogin == true) {
         if (this.$route.fullPath !== "/info") {

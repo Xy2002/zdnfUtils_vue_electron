@@ -27,6 +27,33 @@ function getUserInfo(jwloginToken) {
     })
 }
 
+function checkLoginStatus(jwloginToken) {
+    let options = {
+        'method': 'POST',
+        'url': 'http://ecampus.nfu.edu.cn:2929/jw-privilegei/User/r-getMyself',
+        'headers': {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        form: {
+            'jwloginToken': jwloginToken
+        }
+    };
+    return new Promise((resolve, reject) => {
+        request(options, function (err, res) {
+            if (err) reject(err)
+            else {
+                let resJson = JSON.parse(res.body)
+                if (resJson.err === 400) {
+                    resolve(false)
+                } else {
+                    resolve(true)
+                }
+            }
+        })
+    })
+}
+
+
 function getFacultyList(jwloginToken) {
     let options = {
         'method': 'POST',
@@ -111,4 +138,4 @@ async function getInfo(jwloginToken) {
     }))
 }
 
-module.exports = getInfo
+module.exports = {getInfo, checkLoginStatus}
