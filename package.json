@@ -1,6 +1,6 @@
 {
   "name": "nfu_ecampus_utils",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -17,6 +17,9 @@
     "@fullcalendar/vue": "^5.7.1",
     "core-js": "^3.6.5",
     "electron-builder": "^22.10.5",
+    "electron-log": "^4.3.5",
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-updater": "^4.3.9",
     "element-ui": "^2.15.2",
     "vue": "^2.6.11",
     "vue-router": "^3.5.1",

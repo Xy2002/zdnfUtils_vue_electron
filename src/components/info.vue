@@ -6,7 +6,7 @@
       </el-col>
       <el-col :span="12">
         <div class="grid-content">
-          <h3>注:所有信息都是基于教务系统获取</h3>
+          <h3>注:所有信息都是基于教务系统获取,并且所有操作都是直接调用教务系统接口</h3>
           <el-form :model="infoForm" status-icon :rules="rules" ref="infoForm" label-width="100px"
                    class="demo-ruleForm">
             <el-form-item prop="name">
@@ -167,6 +167,11 @@ export default {
   },
   created() {
     this.initInfo()
+    this.$notify({
+      title: 'success',
+      message: '如果你看到这个通知，代表我写的自动更新生效了，这个版本没有任何意义，只是为了测试自动更新功能',
+      type: 'success'
+    });
   },
 
 }

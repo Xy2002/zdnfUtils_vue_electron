@@ -1,17 +1,13 @@
 'use strict'
 
-import {app, protocol, BrowserWindow, Menu, autoUpdater, dialog} from 'electron'
+import {app, protocol, BrowserWindow, Menu, dialog} from 'electron'
 import {createProtocol} from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, {VUEJS_DEVTOOLS} from 'electron-devtools-installer'
 
+const log = require('electron-log')
 const isDevelopment = process.env.NODE_ENV !== 'production'
-const server = "https://hazel-qh9m6tdx1-xy2002.vercel.app/"
-const feed = `${server}/update/${process.platform}/${app.getVersion()}`
-autoUpdater.setFeedURL(feed)
-
-setInterval(() => {
-  autoUpdater.checkForUpdates()
-}, 60000)
+const {autoUpdater} = require('electron-updater')
+log.info('启用日志')
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -33,6 +29,7 @@ async function createWindow() {
     }
   })
   Menu.setApplicationMenu(null)
+
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
@@ -41,7 +38,7 @@ async function createWindow() {
     createProtocol('app')
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
-
+    autoUpdater.checkForUpdates()
   }
 }
 
@@ -74,7 +71,6 @@ app.on('ready', async () => {
   }
   createWindow()
 })
-
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
   if (process.platform === 'win32') {
@@ -89,22 +85,99 @@ if (isDevelopment) {
     })
   }
 }
+//
+// autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+//   const dialogOpts = {
+//     type: 'info',
+//     buttons: ['Restart', 'Later'],
+//     title: 'Application Update',
+//     message: process.platform === 'win32' ? releaseNotes : releaseName,
+//     detail: 'A new version has been downloaded. Restart the application to apply the updates.'
+//   }
+//
+//   dialog.showMessageBox(dialogOpts).then((returnValue) => {
+//     if (returnValue.response === 0) autoUpdater.quitAndInstall()
+//   })
+// })
+//
+// autoUpdater.on('error', message => {
+//   console.error('There was a problem updating the application')
+//   console.error(message)
+// })
 
-autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
-  const dialogOpts = {
-    type: 'info',
-    buttons: ['Restart', 'Later'],
-    title: 'Application Update',
-    message: process.platform === 'win32' ? releaseNotes : releaseName,
-    detail: 'A new version has been downloaded. Restart the application to apply the updates.'
-  }
+// ======================================================================
+// 更新模块
+// ======================================================================
+if (!process.env.WEBPACK_DEV_SERVER_URL) {
+  autoUpdater.autoDownload = false
 
-  dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) autoUpdater.quitAndInstall()
+  // autoUpdater.signals.updateDownloaded(() => {})
+  autoUpdater.on('error', (error) => {
+    log.warn('检查更新失败: ' + error == null ? 'unknown' : (error.stack || error).toString())
+    dialog.showErrorBox('Error: ', error == null ? 'unknown' : (error.stack || error).toString())
   })
-})
 
-autoUpdater.on('error', message => {
-  console.error('There was a problem updating the application')
-  console.error(message)
-})
+  autoUpdater.on('update-available', (info) => {
+    // var appInfo = {
+    //   info: info.version,
+    //   files: info.files,
+    //   path: info.path,
+    //   sha512: info.sha512,
+    //   releaseDate: info.releaseDate
+    // }
+    console.log(info)
+    dialog.showMessageBox({
+      type: 'info',
+      title: '更新提示',
+      message: '软件需要更新，您是否立即更新？',
+      buttons: ['推迟', '立即更新']
+    }).then((res) => {
+      log.warn('index:' + res.response)
+      if (res.response === 1) {
+        log.warn('选择升级')
+        autoUpdater.downloadUpdate()
+      } else {
+        log.warn('选择不升级:')
+      }
+    })
+  })
+
+  // 检查更新时触发
+  autoUpdater.on('update-available', (res) => {
+    log.warn('检查更新时触发')
+    log.warn(res)
+    // dialog.showMessageBox({
+    //   title: '检查更新',
+    //   message: '正在检查更新'
+    // })
+  })
+
+  // 没有可用更新
+  autoUpdater.on('update-not-available', () => {
+    log.warn('没有可用更新')
+    // dialog.showMessageBox({
+    //   title: '已是最新版',
+    //   message: '当前版本是最新版本。'
+    // })
+  })
+
+  // 安装更新
+  autoUpdater.on('update-downloaded', (res) => {
+    log.warn(res)
+    // console.log(res)
+    log.warn('下载完毕！提示安装更新')
+    dialog.showMessageBox({
+      title: '升级提示！',
+      message: '已自动升级为最新版，请重启应用！'
+    }, () => {
+      log.warn('确认安装')
+      setImmediate(() => autoUpdater.quitAndInstall(true, true))
+    })
+  })
+
+  //下载进度
+  autoUpdater.on('download-progress', (event) => {
+    log.warn(event.percent)
+  })
+}
+
