@@ -133,6 +133,14 @@ export default {
     async getAlerTitle() {
       let jwloginToken = this.$store.getters.getToken
       let loginStatus = await checkLoginStatus(jwloginToken)
+      try {
+        loginStatus = await checkLoginStatus(jwloginToken)
+      } catch (e) {
+        this.$notify.error({
+          title: 'Error',
+          message: '教务系统抽风，请稍后再试'
+        });
+      }
       if (loginStatus === true) {
         let obj = await transcriptSpider(jwloginToken, {xn: '2020', xq: '2'})
         let actualId = obj.user.actualId

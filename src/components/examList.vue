@@ -54,6 +54,21 @@ export default {
     async getExamList() {
       let jwloginToken = this.$store.getters.getToken
       let loginStatus = await checkLoginStatus(jwloginToken)
+      const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      try {
+        loginStatus = await checkLoginStatus(jwloginToken)
+      } catch (e) {
+        this.$notify.error({
+          title: 'Error',
+          message: '教务系统抽风，请稍后再试'
+        });
+        loading.close();
+      }
       console.log(loginStatus)
       if (loginStatus === true) {
         let obj = await examSpider(jwloginToken)
@@ -79,7 +94,7 @@ export default {
         });
         this.$router.push("./login");
       }
-
+      loading.close();
     }
   },
   created() {

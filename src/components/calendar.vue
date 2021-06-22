@@ -71,6 +71,15 @@ export default {
     async checkStatus() {
       let jwloginToken = this.$store.getters.getToken
       let loginStatus = await checkLoginStatus(jwloginToken)
+      try {
+        loginStatus = await checkLoginStatus(jwloginToken)
+      } catch (e) {
+        console.log(e)
+        this.$notify.error({
+          title: 'Error',
+          message: '教务系统抽风，请稍后再试'
+        });
+      }
       console.log(loginStatus)
       if (loginStatus !== true) {
         this.$notify.error({

@@ -56,7 +56,11 @@ export default {
   },
   created() {
     this.initLoginState();
-
+    this.$notify({
+      title: 'success',
+      message: '当前版本号为0.1.6，优化了更新算法',
+      type: 'success'
+    });
   },
 };
 </script>

@@ -13,10 +13,10 @@ log.info('启用日志')
 protocol.registerSchemesAsPrivileged([
   {scheme: 'app', privileges: {secure: true, standard: true}}
 ])
-
+var win
 async function createWindow() {
   // Create the browser window.
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 1294,
     height: 800,
     webPreferences: {
@@ -176,8 +176,15 @@ if (!process.env.WEBPACK_DEV_SERVER_URL) {
   })
 
   //下载进度
+  // autoUpdater.on('download-progress', (event) => {
+  //   log.warn(event.percent)
+  // })
   autoUpdater.on('download-progress', (event) => {
     log.warn(event.percent)
+    dialog.showMessageBox({
+      title: 'downloadProgress',
+      message: event.percent.toString().slice(0, 5)
+    })
   })
 }
 

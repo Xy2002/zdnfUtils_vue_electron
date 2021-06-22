@@ -95,7 +95,15 @@ export default {
   methods: {
     async initInfo() {
       let jwloginToken = this.$store.getters.getToken
-      let loginStatus = await checkLoginStatus(jwloginToken)
+      let loginStatus
+      try {
+        loginStatus = await checkLoginStatus(jwloginToken)
+      } catch (e) {
+        this.$notify.error({
+          title: 'Error',
+          message: '教务系统抽风，请稍后再试'
+        });
+      }
       console.log(loginStatus)
       if (loginStatus === true) {
         this.infoForm = await getInfo(jwloginToken)
@@ -167,11 +175,7 @@ export default {
   },
   created() {
     this.initInfo()
-    this.$notify({
-      title: 'success',
-      message: '如果你看到这个通知，代表我写的自动更新生效了，这个版本没有任何意义，只是为了测试自动更新功能',
-      type: 'success'
-    });
+
   },
 
 }
