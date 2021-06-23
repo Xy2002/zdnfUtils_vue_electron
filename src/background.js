@@ -70,6 +70,9 @@ app.on('ready', async () => {
     }
   }
   createWindow()
+  app.on('activate', function () {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  })
 })
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {

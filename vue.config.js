@@ -30,6 +30,11 @@ module.exports = {
                         ]
                     }]
                 },
+                'mac':{
+                    'icon':'./public/Icon.icns',
+                    "category":"public.app-category.productivity",
+                    "target":['dmg']
+                },
                 artifactName: '${productName}_Setup_${version}_${platform}.${ext}',
                 'nsis': {
                     include: './installer.nsh',
