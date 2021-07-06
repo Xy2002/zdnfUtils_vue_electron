@@ -94,8 +94,14 @@ export default {
   },
   methods: {
     async initInfo() {
+      const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
       let jwloginToken = this.$store.getters.getToken
-      let loginStatus
+      let loginStatus = false
       try {
         loginStatus = await checkLoginStatus(jwloginToken)
       } catch (e) {
@@ -104,7 +110,7 @@ export default {
           message: '教务系统抽风，请稍后再试'
         });
       }
-      console.log(loginStatus)
+      console.log("loginStatus",loginStatus)
       if (loginStatus === true) {
         this.infoForm = await getInfo(jwloginToken)
       } else {
@@ -114,6 +120,7 @@ export default {
         });
         this.$router.push("./login");
       }
+      loading.close()
     },
     submitForm(formName) {
       let jwloginToken = this.$store.getters.getToken

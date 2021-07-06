@@ -7,22 +7,30 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        jwLoginToken: ''
+        jwLoginToken: '',
+        serverToken:''
     },
     actions: {
         increment(store) {
             store.commit("increment")
         },
+
     },
     getters: {
         getToken: state => {
             return state.jwLoginToken
+        },
+        getServerToken: state => {
+            return state.serverToken
         }
     },
     mutations: {
         increment(state, Token) {
             state.jwLoginToken = Token
         },
+        incrementServerLogin(state,Token){
+            state.serverToken = Token
+        }
     },
 
     plugins: [createPersistedState()],

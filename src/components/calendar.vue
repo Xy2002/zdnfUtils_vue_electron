@@ -91,6 +91,12 @@ export default {
     }
   },
   async created() {
+    const loading = this.$loading({
+      lock: true,
+      text: "Loading",
+      spinner: "el-icon-loading",
+      background: "rgba(0, 0, 0, 0.7)",
+    });
     await this.checkStatus()
     let arr = ['https://unpkg.com/popper.js/dist/umd/popper.min.js',
       'https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js'];
@@ -100,6 +106,7 @@ export default {
       script.src = item;
       document.getElementsByTagName('body')[0].appendChild(script);
     })
+    loading.close()
   }
 }
 </script>

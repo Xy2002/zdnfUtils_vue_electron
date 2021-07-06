@@ -30,6 +30,7 @@ function getUserInfo(jwloginToken) {
 function checkLoginStatus(jwloginToken) {
     let options = {
         'method': 'POST',
+        'timeout':3000,
         'url': 'http://ecampus.nfu.edu.cn:2929/jw-privilegei/User/r-getMyself',
         'headers': {
             'Content-Type': 'application/x-www-form-urlencoded'

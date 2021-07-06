@@ -51,6 +51,9 @@
                       v-model="loginFormS.pass"
                   ></el-input>
                 </el-form-item>
+                <div style="margin-bottom: 15px">
+                  <el-checkbox v-model="checked1" label="记住密码">记住密码</el-checkbox>
+                </div>
                 <div class="buttonGroup">
                   <el-form-item>
                     <el-button type="primary" @click="submitForm('loginFormS')"
@@ -74,6 +77,7 @@
 
 <script>
 const ecampusLogin = require("../utils/ecampusLogin");
+const serverLogin = require("../utils/serverLogin")
 export default {
   name: "login",
   data() {
@@ -92,6 +96,7 @@ export default {
       }
     };
     return {
+      checked1: false,
       activeIndex: "1",
       isLogin: false,
       labelPosition: "right",
@@ -121,24 +126,29 @@ export default {
           let user = {};
           user.username = this.loginFormS.username;
           user.password = this.loginFormS.pass;
-          ecampusLogin(user)
-              .then((res) => {
-                this.$store.commit("increment", res)
-                document.cookie = `jwLoginToken=${res}`;
-                this.$notify({
-                  title: '成功',
-                  message: `登录成功`,
-                  type: 'success'
+          if(this.checked1){
+            serverLogin(user)
+            .then(res=>console.log(res))
+          }else{
+            ecampusLogin(user)
+                .then((res) => {
+                  this.$store.commit("increment", res)
+                  document.cookie = `jwLoginToken=${res}`;
+                  this.$notify({
+                    title: '成功',
+                    message: `登录成功`,
+                    type: 'success'
+                  });
+                  location.reload();
+                  loading.close();
+                })
+                .catch((err) => {
+                  this.$alert(err, "Tips", {
+                    confirmButtonText: "确定",
+                  });
+                  loading.close();
                 });
-                location.reload();
-                loading.close();
-              })
-              .catch((err) => {
-                this.$alert(err, "Tips", {
-                  confirmButtonText: "确定",
-                });
-                loading.close();
-              });
+          }
         } else {
           this.$notify.error({
             title: '错误',
@@ -148,6 +158,7 @@ export default {
           return false;
         }
       });
+
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();

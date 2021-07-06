@@ -131,6 +131,12 @@ export default {
   },
   methods: {
     async getAlerTitle() {
+      const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
       let jwloginToken = this.$store.getters.getToken
       let loginStatus = await checkLoginStatus(jwloginToken)
       try {
@@ -157,6 +163,7 @@ export default {
         });
         this.$router.push("./login");
       }
+      loading.close()
     },
     async getTranscript() {
       let jwloginToken = this.$store.getters.getToken

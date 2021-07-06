@@ -23,6 +23,7 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
@@ -35,6 +36,11 @@ export default {
       console.log(key, keyPath);
     },
     initLoginState() {
+      // if(this.$store.getters.getServerToken){
+      //   this.isLogin=true;
+      //
+      // }
+
       if (this.$store.getters.getToken || document.cookie) {
         this.isLogin = true;
         if (document.cookie) {
@@ -46,7 +52,8 @@ export default {
           this.$router.push("./login");
         }
       }
-      if (this.isLogin == true) {
+
+      if (this.isLogin === true) {
         if (this.$route.fullPath !== "/info") {
           this.$router.push("./info");
         }
@@ -58,7 +65,7 @@ export default {
     this.initLoginState();
     this.$notify({
       title: 'success',
-      message: '当前版本号为0.1.6，优化了更新算法',
+      message: '当前版本号为0.1.7，优化了发送请求模块',
       type: 'success'
     });
   },

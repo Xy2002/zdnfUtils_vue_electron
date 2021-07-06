@@ -1,6 +1,6 @@
 'use strict'
 
-import {app, protocol, BrowserWindow, Menu, dialog} from 'electron'
+import {app, protocol, BrowserWindow, dialog} from 'electron'
 import {createProtocol} from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, {VUEJS_DEVTOOLS} from 'electron-devtools-installer'
 
@@ -28,7 +28,7 @@ async function createWindow() {
       enableRemoteModule: process.env.ELECTRON_NODE_INTEGRATION
     }
   })
-  Menu.setApplicationMenu(null)
+  //Menu.setApplicationMenu(null)
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -70,9 +70,9 @@ app.on('ready', async () => {
     }
   }
   createWindow()
-  app.on('activate', function () {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
-  })
+  // app.on('activate', function () {
+  //   if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  // })
 })
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
