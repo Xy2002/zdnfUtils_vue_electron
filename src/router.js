@@ -11,8 +11,9 @@ import VueRouter from 'vue-router';
 import login from './components/login';
 import info from './components/info'
 import calendar from './components/calendar'
-import examList from "@/components/examList";
-import transcriptList from "@/components/transcriptList";
+import examList from "./components/examList";
+import transcriptList from "./components/transcriptList";
+import creditManage from "./components/creditManage";
 //第三方库需要use一下才能用
 Vue.use(VueRouter)
 
@@ -24,7 +25,8 @@ const routes = [
     {path: '/info', component: info},
     {path: '/calendar', component: calendar},
     {path: '/examList', component: examList},
-    {path: '/transcriptList', component: transcriptList}
+    {path: '/transcriptList', component: transcriptList},
+    {path: '/creditManage',component: creditManage}
 ]
 
 //实例化VueRouter并将routes添加进去
