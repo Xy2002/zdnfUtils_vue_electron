@@ -65,7 +65,7 @@ export default {
     this.initLoginState();
     this.$notify({
       title: 'success',
-      message: '当前版本号为0.1.8，增加了学分管理功能，目前只适配了19计科和软工的人才培养方案',
+      message: '当前版本号为0.1.9，增加了学分管理功能，目前只适配了19计科和软工的人才培养方案',
       type: 'success'
     });
   },

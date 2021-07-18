@@ -33,7 +33,7 @@ module.exports = {
                 'mac':{
                     'icon':'./public/Icon.icns',
                     "category":"public.app-category.productivity",
-                    "target":['dmg']
+                    "target":['dmg','zip']
                 },
                 artifactName: '${productName}_Setup_${version}_${platform}.${ext}',
                 'nsis': {
