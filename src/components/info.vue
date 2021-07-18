@@ -19,13 +19,13 @@
                 <template slot="prepend">学号</template>
               </el-input>
             </el-form-item>
-            <el-form-item prop="faculty">
-              <el-input v-model="infoForm.faculty" :disabled="true">
+            <el-form-item prop="major">
+              <el-input v-model="infoForm.major" :disabled="true">
                 <template slot="prepend">院系</template>
               </el-input>
             </el-form-item>
-            <el-form-item prop="major">
-              <el-input v-model="infoForm.major" :disabled="true">
+            <el-form-item prop="faculty">
+              <el-input v-model="infoForm.faculty" :disabled="true">
                 <template slot="prepend">专业</template>
               </el-input>
             </el-form-item>
