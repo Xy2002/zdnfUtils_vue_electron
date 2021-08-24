@@ -13,6 +13,7 @@
         <el-menu-item route="./examList" index="3">考试信息列表</el-menu-item>
         <el-menu-item route="./transcriptList" index="4">成绩查询</el-menu-item>
         <el-menu-item route="./creditManage" index="5">学分管理</el-menu-item>
+        <el-menu-item v-show="isLogin" @click="clearCookie" style="position: absolute;right: 0;">退出登录</el-menu-item>
       </el-menu>
       <router-view></router-view>
     </div>
@@ -28,7 +29,7 @@ export default {
   data() {
     return {
       activeIndex: "1",
-      isLogin: false,
+      isLogin: false
     };
   },
   methods: {
@@ -43,6 +44,7 @@ export default {
 
       if (this.$store.getters.getToken || document.cookie) {
         this.isLogin = true;
+        console.log(document.cookie)
         if (document.cookie) {
           this.$store.commit("increment", document.cookie.split("=")[1]);
         }
@@ -60,6 +62,25 @@ export default {
       }
       console.log(this.isLogin);
     },
+    clearCookie(){
+      this.$store.commit('resetState')
+      function clearAllCookie() {
+        var keys = document.cookie.match(/[^ =;]+(?=\=)/g);
+        if(keys) {
+          for(var i = keys.length; i--;)
+            document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString()
+        }
+      }
+      clearAllCookie()
+      console.log("reset!")
+      location.reload()
+      // this.$alert('请点击确认按钮以刷新页面状态','Tips',{
+      //   confirmButtonText:'确定',
+      //   callback:() => {
+      //     location.reload();
+      //   }
+      // })
+    },
   },
   created() {
     this.initLoginState();
@@ -68,6 +89,14 @@ export default {
       message: '当前版本号为0.1.9，增加了学分管理功能，目前只适配了19计科和软工的人才培养方案',
       type: 'success'
     });
+    if (sessionStorage.getItem("store") ) {
+      this.$store.replaceState(Object.assign({},
+          this.$store.state,JSON.parse(sessionStorage.getItem("store"))))
+    }
+    //在页面刷新时将vuex里的信息保存到sessionStorage里
+    window.addEventListener("beforeunload",()=>{
+      sessionStorage.setItem("store",JSON.stringify(this.$store.state))
+    })
   },
 };
 </script>

@@ -13,8 +13,8 @@ function courseSpider(jwloginToken) {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
         form: {
-            'xn': '2020',
-            'xq': '2',
+            'xn': '2021',
+            'xq': '1',
             'jwloginToken': jwloginToken
         }
     };

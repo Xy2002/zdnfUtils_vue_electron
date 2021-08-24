@@ -28,7 +28,7 @@ async function createWindow() {
       enableRemoteModule: process.env.ELECTRON_NODE_INTEGRATION
     }
   })
-  Menu.setApplicationMenu(null)
+  // Menu.setApplicationMenu(null)
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -61,6 +61,113 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
+  const template = [
+    {
+      label: '编辑',
+      submenu: [
+        {
+          label: '撤销',
+          accelerator: 'CmdOrCtrl+Z',
+          role: 'undo'
+        },
+        {
+          label: '重做',
+          accelerator: 'Shift+CmdOrCtrl+Z',
+          role: 'redo'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: '复制',
+          accelerator: 'CmdOrCtrl+C',
+          role: 'copy'
+        },
+        {
+          label:'粘贴',
+          accelerator: 'CmdOrCtrl+V',
+          role: 'paste'
+        },
+        {
+          label: '删除',
+          role: 'delete'
+        },
+        {
+          label: '全选',
+          accelerator: 'CmdOrCtrl+A',
+          role: 'selectAll'
+        }
+      ]
+    },
+    {
+      label: '显示',
+      submenu: [
+        {
+          label: '放大',
+          accelerator: "CmdOrCtrl+Plus",
+          role: 'zoomin'
+        },
+        {
+          label: '恢复默认大小',
+          accelerator: 'CmdOrCtrl+0',
+          role: 'resetzoom'
+        },
+        {
+          label: '缩小',
+          accelerator: 'CmdOrCtrl+-',
+          role: 'zoomout'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: '切换全屏',
+          accelerator: 'Control+Command+F',
+          role: 'togglefullscreen'
+        }
+      ]
+    },
+    {
+      label: '视图',
+      submenu: [
+        {
+          label: '刷新',
+          accelerator: 'CmdOrCtrl+R',
+          role: 'reload'
+        },
+        {
+          label: '强制刷新(忽略缓存)',
+          accelerator: 'Control+Command+R',
+          role: 'forcereload'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: '切换开发者工具',
+          accelerator: '',
+          role: 'toggledevtools',
+          enabled: isDevelopment
+        }
+      ]
+    }
+  ];
+  if (process.platform === 'darwin') {
+    template.unshift({
+      label: app.getName(),
+      submenu: [
+        {
+          label: '退出',
+          accelerator: 'CmdOrCtrl+Q',
+          click() {
+            app.quit();
+          }
+        }
+      ]
+    });
+  }
+  const appMenu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(appMenu);
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
@@ -183,7 +290,7 @@ if (!process.env.WEBPACK_DEV_SERVER_URL) {
   //   log.warn(event.percent)
   // })
   autoUpdater.on('download-progress', (event) => {
-    log.warn(event.percent)
+    // log.warn(event.percent)
     dialog.showMessageBox({
       title: 'downloadProgress',
       message: event.percent.toString().slice(0, 5)

@@ -8,7 +8,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         jwLoginToken: '',
-        serverToken:''
+        serverToken:'',
+        user:{}
     },
     actions: {
         increment(store) {
@@ -22,6 +23,9 @@ export default new Vuex.Store({
         },
         getServerToken: state => {
             return state.serverToken
+        },
+        getUser: state=>{
+            return state.user
         }
     },
     mutations: {
@@ -30,7 +34,16 @@ export default new Vuex.Store({
         },
         incrementServerLogin(state,Token){
             state.serverToken = Token
-        }
+        },
+        incrementUser(state,user){
+            state.user=user
+        },
+        resetState(state){
+          Object.assign(state,{
+              jwLoginToken: '',
+              serverToken:''
+          })
+        },
     },
 
     plugins: [createPersistedState()],

@@ -61,7 +61,7 @@ export default {
           if (courseFormatData) {
             successCallback(courseFormatData)
           } else {
-            failureCallback("获取课程表失败");
+            failureCallback("获取课程表失败!");
           }
         }
       },

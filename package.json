@@ -15,6 +15,7 @@
   "dependencies": {
     "@fullcalendar/timegrid": "^5.7.2",
     "@fullcalendar/vue": "^5.7.1",
+    "cheerio": "^1.0.0-rc.10",
     "core-js": "^3.6.5",
     "electron-builder": "^22.10.4",
     "electron-log": "^4.3.5",

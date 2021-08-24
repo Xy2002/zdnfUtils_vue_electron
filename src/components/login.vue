@@ -76,8 +76,8 @@
 </template>
 
 <script>
+
 const ecampusLogin = require("../utils/ecampusLogin");
-const serverLogin = require("../utils/serverLogin")
 export default {
   name: "login",
   data() {
@@ -126,29 +126,29 @@ export default {
           let user = {};
           user.username = this.loginFormS.username;
           user.password = this.loginFormS.pass;
-          if(this.checked1){
-            serverLogin(user)
-            .then(res=>console.log(res))
+          if (this.checked1) {
+            this.$store.commit("incrementUser", user)
           }else{
-            ecampusLogin(user)
-                .then((res) => {
-                  this.$store.commit("increment", res)
-                  document.cookie = `jwLoginToken=${res}`;
-                  this.$notify({
-                    title: '成功',
-                    message: `登录成功`,
-                    type: 'success'
-                  });
-                  location.reload();
-                  loading.close();
-                })
-                .catch((err) => {
-                  this.$alert(err, "Tips", {
-                    confirmButtonText: "确定",
-                  });
-                  loading.close();
-                });
+            this.$store.commit("incrementUser",{username:"",password:""})
           }
+          ecampusLogin(user)
+              .then((res) => {
+                this.$store.commit("increment", res)
+                document.cookie = `jwLoginToken=${res}`;
+                this.$notify({
+                  title: '成功',
+                  message: `登录成功`,
+                  type: 'success'
+                });
+                location.reload();
+                loading.close();
+              })
+              .catch((err) => {
+                this.$alert(err, "Tips", {
+                  confirmButtonText: "确定",
+                });
+                loading.close();
+              });
         } else {
           this.$notify.error({
             title: '错误',
@@ -164,6 +164,14 @@ export default {
       this.$refs[formName].resetFields();
     },
   },
+  created() {
+    let obj = this.$store.getters.getUser
+    if(obj.username&&obj.password){
+      this.loginFormS.username=obj.username;
+      this.loginFormS.pass=obj.password;
+      this.checked1=true
+    }
+  }
 };
 </script>
 
