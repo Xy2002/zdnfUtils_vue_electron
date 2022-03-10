@@ -1,4 +1,4 @@
-# fuck_zdnf
+# 基于南方学院教务系统的教务工具
 
 ## Project setup
 ```
